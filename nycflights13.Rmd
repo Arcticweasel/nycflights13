@@ -132,6 +132,9 @@ weather %>%
 ## Planes
 Look at the data via `View` and print the first 5 rows.
 ```{r}
+View(planes)
+planes %>% 
+  head(n=5)
 ```
 
 Count the numer of planes per `manufacturer` and sort in descending order? 
@@ -139,15 +142,31 @@ Count the numer of planes per `manufacturer` and sort in descending order?
 > You can either count via `summarise(n())`, or more easily via `count()`.
 
 ```{r}
+planes %>%
+  group_by(manufacturer) %>%
+  count() %>%
+  arrange(desc(n))
+  
 ```
 
 Count the number of planes per `manufacturer` and `model` and again sort in descending order
 ```{r}
+planes %>%
+  group_by(manufacturer, model) %>%
+  count() %>%
+  arrange(desc(n))
 ```
 
 Calculate per manufacturer: 1. number of planes, 2. average number of `seats`, 3. average number of `engines`, 4. average `year` when the planes where manufactured. And again order in descending order of the number of planes
 
 ```{r}
+planes %>%
+  group_by(manufacturer) %>% 
+  summarise(No_of_Planes = n(),
+            Avg_Seats = mean(seats, na.rm = T),
+            Avg_Engines = mean(engines, na.rm = T),
+            Avg_Year = mean(year, na.rm. = T)) %>%
+  arrange(desc(No_of_Planes))
 
 ```
 
