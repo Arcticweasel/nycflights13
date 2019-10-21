@@ -65,6 +65,9 @@ airports %>%
 ## Weather
 Use `View` to inspect the data and print the first 5 rows. Does the data only cover the airports in New York, or also the weather data at destination airports? 
 ```{r}
+View(weather)
+weather %>%
+  head(n=5)
 
 ```
 
@@ -79,6 +82,12 @@ Let's change the units of the weather data to European standards.
 >Again, use the `mutate` function and assign the result back to `weather` in order to save the changes to the data.
 
 ```{r}
+weather <- weather %>%
+  mutate(temp = (temp-32)*5/9,
+         dewp = (dewp-32)*5/9,
+         visib = visib/1.60934,
+         wind_speed = wind_speed/1.60934,
+         precip = precip*20.54)
 
 ```
 
@@ -88,17 +97,34 @@ After such a transforation we should check whether values are plausbile:
 
 What was the 2013 average of `temp`, `wind_speed`, and `visib` at the JFK airport?
 ```{r}
-
+weather %>%
+  filter(origin == "JFK")%>%
+  summarise(mean(temp, na.rm = T),
+            mean(wind_speed, na.rm = T),
+            mean(visib, na.rm = T))
 ```
 
 What was the *monthly* average of `temp`, `wind_speed`, and `visib` at the JFK airport?
 ```{r}
-
+weather %>%
+  filter(origin == "JFK") %>%
+  group_by(month) %>%
+  summarise(mean(temp, na.rm = T),
+            mean(wind_speed, na.rm = T),
+            mean(visib, na.rm = T))
 ```
+
 
 What was the minimum `temp`, the maximum `temp`, and the total amount of `precip` at each of the 3 airports in December 2013? 
 
 ```{r}
+weather %>% 
+  filter(month == 12) %>%
+  group_by(origin) %>% 
+  summarise(Min_Temp = min(temp, na.rm = T),
+            Max_Temp = max(temp, na.rm = T),
+            Total_Precip = sum(precip, na.rm = T))
+  
 
 ```
 
